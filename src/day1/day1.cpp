@@ -1,16 +1,13 @@
 #include "utility.h"
 #include <iostream>
 #include <string>
-#include <string_view>
-#include <algorithm>
-#include <ranges>
 #include <cmath>
-#include <numeric>
 #include <unordered_map>
 #include <regex>
 
-void build_integer_vec1(const std::vector<std::string> &string_vec, std::vector<int> &int_vec)
+int do_task1(const std::vector<std::string> &string_vec)
 {
+    int acc{0};
     for (const std::string &cur : string_vec)
     {
         int to_push{0};
@@ -29,11 +26,13 @@ void build_integer_vec1(const std::vector<std::string> &string_vec, std::vector<
             }
         }
         to_push = second_dig + first_dig * 10;
-        int_vec.push_back(to_push);
+        acc += to_push;
     }
+
+    return acc;
 }
 
-void build_integer_vec2(const std::vector<std::string> &string_vec, std::vector<int> &int_vec)
+int do_task2(const std::vector<std::string> &string_vec)
 {
     std::unordered_map<std::string, int> map =
         {
@@ -60,6 +59,7 @@ void build_integer_vec2(const std::vector<std::string> &string_vec, std::vector<
         };
     const std::regex reg{"(zero|one|two|three|four|five|six|seven|eight|nine|[0-9])"};
 
+    int acc{0};
     for (const std::string &cur : string_vec)
     {
         std::smatch m;
@@ -90,28 +90,21 @@ void build_integer_vec2(const std::vector<std::string> &string_vec, std::vector<
         }
         to_push += second_digit_iterator->second + first_digit_iterator->second * 10;
 
-        int_vec.push_back(to_push);
+        acc += to_push;
     }
+    return acc;
 }
 
 int execute_challenge1()
 {
     std::vector<std::string> input = parse_file_line("../input/day1");
-
-    std::vector<int> input_ints;
-    build_integer_vec1(input, input_ints);
-
-    return std::accumulate(input_ints.begin(), input_ints.end(), 0);
+    return do_task1(input);   
 }
 
 int execute_challenge2()
 {
     std::vector<std::string> input = parse_file_line("../input/day1");
-    std::vector<int> input_ints;
-
-    build_integer_vec2(input, input_ints);
-
-    return std::accumulate(input_ints.begin(), input_ints.end(), 0);
+    return do_task2(input);
 }
 
 int main()
