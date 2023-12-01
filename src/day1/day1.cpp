@@ -9,42 +9,28 @@
 #include <unordered_map>
 #include <regex>
 
-void reduce_to_twodigits(std::vector<int> &int_vec)
-{
-    for (int &cur : int_vec)
-    {
-        int digit{0};
-
-        digit = cur % 10;
-        int first_digit{digit};
-        cur /= 10;
-        while (cur)
-        {
-            digit = cur % 10;
-            cur /= 10;
-        }
-
-        cur += first_digit + digit * 10;
-    }
-}
-
 void build_integer_vec1(const std::vector<std::string> &string_vec, std::vector<int> &int_vec)
 {
     for (const std::string &cur : string_vec)
     {
         int to_push{0};
-        int offs{0};
-        for (const char &cur_c : cur | std::views::reverse)
+        int first_dig{-1};
+        int second_dig{-1};
+        for (const char &cur_c : cur)
         {
+            if (cur_c < 58 && cur_c > 47 && first_dig < 0)
+            {
+                first_dig = cur_c - 48;
+            }
+
             if (cur_c < 58 && cur_c > 47)
             {
-                to_push += (cur_c - 48) * static_cast<int>(std::pow(10, offs++));
+                second_dig = cur_c - 48;
             }
         }
+        to_push = second_dig + first_dig * 10;
         int_vec.push_back(to_push);
     }
-
-    reduce_to_twodigits(int_vec);
 }
 
 void build_integer_vec2(const std::vector<std::string> &string_vec, std::vector<int> &int_vec)
@@ -78,29 +64,34 @@ void build_integer_vec2(const std::vector<std::string> &string_vec, std::vector<
     {
         std::smatch m;
         auto it_start{cur.begin()};
-        std::vector<std::string> matches;
+        std::string first_digit{""};
+        std::string second_digit{""};
         while (std::regex_search(it_start, cur.end(), m, reg))
         {
-            matches.push_back(m[0]);
+            if(first_digit.length() == 0)
+            {
+                first_digit = m[0];
+            }
+
+            second_digit = m[0];
+            
 
             // necessary as e.g. "eighthree" should be interpreted as 83
             it_start = m[0].length() < 2 ? m.suffix().first : m.suffix().first - 1;
         }
 
         int to_push{0};
-        int offs{0};
-        for (auto cur_match : matches | std::views::reverse)
+
+        auto second_digit_iterator{map.find(second_digit)};
+        auto first_digit_iterator{map.find(first_digit)};
+        if (first_digit_iterator == map.end() || second_digit_iterator == map.end())
         {
-            auto digit_iterator{map.find(cur_match)};
-            if (digit_iterator == map.end())
-            {
-                throw std::runtime_error("could not find in map");
-            }
-            to_push += digit_iterator->second * static_cast<int>(std::pow(10, offs++));
+            throw std::runtime_error("could not find in map");
         }
+        to_push += second_digit_iterator->second + first_digit_iterator->second * 10;
+
         int_vec.push_back(to_push);
     }
-    reduce_to_twodigits(int_vec);
 }
 
 int execute_challenge1()
