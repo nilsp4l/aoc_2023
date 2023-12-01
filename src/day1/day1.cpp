@@ -10,7 +10,6 @@ int do_task1(const std::vector<std::string> &string_vec)
     int acc{0};
     for (const std::string &cur : string_vec)
     {
-        int to_push{0};
         int first_dig{-1};
         int second_dig{-1};
         for (const char &cur_c : cur)
@@ -25,8 +24,7 @@ int do_task1(const std::vector<std::string> &string_vec)
                 second_dig = cur_c - 48;
             }
         }
-        to_push = second_dig + first_dig * 10;
-        acc += to_push;
+        acc += second_dig + first_dig * 10;
     }
 
     return acc;
@@ -68,19 +66,16 @@ int do_task2(const std::vector<std::string> &string_vec)
         std::string second_digit{""};
         while (std::regex_search(it_start, cur.end(), m, reg))
         {
-            if(first_digit.length() == 0)
+            if (first_digit.length() == 0)
             {
                 first_digit = m[0];
             }
 
             second_digit = m[0];
-            
 
             // necessary as e.g. "eighthree" should be interpreted as 83
             it_start = m[0].length() < 2 ? m.suffix().first : m.suffix().first - 1;
         }
-
-        int to_push{0};
 
         auto second_digit_iterator{map.find(second_digit)};
         auto first_digit_iterator{map.find(first_digit)};
@@ -88,26 +83,21 @@ int do_task2(const std::vector<std::string> &string_vec)
         {
             throw std::runtime_error("could not find in map");
         }
-        to_push += second_digit_iterator->second + first_digit_iterator->second * 10;
-
-        acc += to_push;
+        acc += second_digit_iterator->second + first_digit_iterator->second * 10;
     }
     return acc;
 }
 
-int execute_challenge1()
+std::pair<int, int> execute_challenges()
 {
     std::vector<std::string> input = parse_file_line("../input/day1");
-    return do_task1(input);   
-}
-
-int execute_challenge2()
-{
-    std::vector<std::string> input = parse_file_line("../input/day1");
-    return do_task2(input);
+    int task1{do_task1(input)};
+    int task2{do_task2(input)};
+    return std::make_pair(task1, task2);
 }
 
 int main()
 {
-    std::cout << "First star: " << execute_challenge1() << ", Second Star: " << execute_challenge2() << std::endl;
+    std::pair<int, int> results{execute_challenges()};
+    std::cout << "First star: " << results.first << ", Second Star: " << results.second << std::endl;
 }
