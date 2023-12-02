@@ -67,33 +67,6 @@ int get_line_value(const std::unordered_map<std::string, int> &map, std::functio
     return func(game_it->second, red_it->second, green_it->second, blue_it->second);
 }
 
-int do_task1(std::vector<std::string> lines)
-{
-    std::regex reg{"Game [0-9]+|[0-9]+ (blue|red|green)"};
-    int acc{0};
-
-    for (const std::string &line : lines)
-    {
-        std::unordered_map<std::string, int> map{get_line_map(line, reg)};
-        auto red_it{map.find("red")};
-        auto green_it{map.find("green")};
-        auto blue_it{map.find("blue")};
-        auto game_it{map.find("Game")};
-
-        if (red_it == map.end() || green_it == map.end() || blue_it == map.end() || game_it == map.end())
-        {
-            throw std::runtime_error{"token not in map"};
-        }
-
-        if (red_it->second <= 12 && green_it->second <= 13 && blue_it->second <= 14)
-        {
-            acc += game_it->second;
-        }
-    }
-
-    return acc;
-}
-
 int do_task(std::vector<std::string> lines, bool task1)
 {
     std::regex reg{"Game [0-9]+|[0-9]+ (blue|red|green)"};
