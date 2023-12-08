@@ -48,33 +48,9 @@ std::shared_ptr<node> build_tree(const std::vector<std::string> &lines, std::str
 
     std::pair<std::string_view, std::string_view> children = get_children(line);
 
-    if (children.first == cur_val && children.second == cur_val)
-    {
-
-        root->val = cur_val;
-        root->left = root;
-        root->right = root;
-    }
-    else if (children.first == cur_val)
-    {
-
-        root->val = cur_val;
-        root->right = root;
-        root->left = build_tree(lines, children.second, stack);
-    }
-    else if (children.first == cur_val)
-    {
-        root->val = cur_val;
-        root->left = build_tree(lines, children.first, stack);
-        root->right = root;
-    }
-
-    else
-    {
-        root->val = cur_val;
-        root->left = build_tree(lines, children.first, stack);
-        root->right = build_tree(lines, children.second, stack);
-    }
+    root->val = cur_val;
+    root->left = build_tree(lines, children.first, stack);
+    root->right = build_tree(lines, children.second, stack);
 
     return root;
 }
@@ -113,7 +89,7 @@ long do_task1(std::shared_ptr<node> root, std::string_view instructions)
 long compute_lcm(const std::vector<long> &nums)
 {
     long acc{1};
-    for(long num : nums)
+    for (long num : nums)
     {
         acc = std::lcm(acc, num);
     }
@@ -134,7 +110,7 @@ long count_steps_to_z(std::vector<std::shared_ptr<node>> end_with_a, std::string
             for (std::size_t i{0}; i < end_with_a.size(); ++i)
             {
                 auto &cur_node{end_with_a.at(i)};
-                
+
                 switch (instruction)
                 {
                 case 'L':
@@ -147,7 +123,7 @@ long count_steps_to_z(std::vector<std::shared_ptr<node>> end_with_a, std::string
                     break;
                 }
 
-                if(cur_node->val.ends_with('Z'))
+                if (cur_node->val.ends_with('Z'))
                 {
                     accs.push_back(current_acc);
                     end_with_a.erase(end_with_a.begin() + i);
@@ -156,7 +132,7 @@ long count_steps_to_z(std::vector<std::shared_ptr<node>> end_with_a, std::string
             }
             ++current_acc;
 
-            if(end_with_a.empty())
+            if (end_with_a.empty())
             {
                 return compute_lcm(accs);
             }
