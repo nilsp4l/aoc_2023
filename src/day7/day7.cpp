@@ -208,8 +208,8 @@ std::pair<long, long> execute_tasks()
         {'Q', 10},
         {'K', 11},
         {'A', 12}};
-    long first{do_tasks(parse_file_line("../../../input/day7"), card_map1, false)};
-    long second{do_tasks(parse_file_line("../../../input/day7"), card_map2, true)};
+    long first{do_tasks(parse_file_line("../input/day7"), card_map1, false)};
+    long second{do_tasks(parse_file_line("../input/day7"), card_map2, true)};
     return {first, second};
 }
 
