@@ -98,7 +98,7 @@ long compute_lcm(const std::vector<long> &nums)
 }
 
 // this just works because the lcm of all numbers is a multiple of instructions.size()
-// as i already spent way too much time on this, i will accept it
+// as i've already spent way too much time on this, i will accept it
 long count_steps_to_z(std::vector<std::shared_ptr<node>> end_with_a, std::string_view instructions)
 {
     std::vector<long> accs;
